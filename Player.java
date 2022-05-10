@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
@@ -8,7 +10,10 @@ public class Player {
     private Movement movement = new Movement();
     private Vector2 vector2 = new Vector2();
 
-    private Projectile projectile = null;
+    private ArrayList<Projectile> projectiles = new ArrayList<>();
+
+    private float cooldown = 2f;
+    private float time = 0f;
 
     public Player(long window) {
         Screen.WINDOW = window;
@@ -63,16 +68,19 @@ public class Player {
             movement.updateMovement(vector2);
         }
 
-        if (glfwGetMouseButton(Screen.WINDOW, GLFW_MOUSE_BUTTON_1) == GL_TRUE) {
-            projectile = new Projectile(vector2.getX(), vector2.getY() + movement.getSize());
+        if (glfwGetMouseButton(Screen.WINDOW, GLFW_MOUSE_BUTTON_1) == GL_TRUE && time > cooldown) {
+            time = 0;
+            Projectile projectile = new Projectile(vector2.getX(), vector2.getY() + movement.getSize());
+            projectiles.add(projectile);
         }
 
-        if (projectile != null) {
-            projectile.updateProjectile();
+        if (projectiles.size() > 0) {
+            for (Projectile projectile: projectiles) {
+                projectile.updateProjectile();
+            }
         }
 
-
-        
+        time += 0.1;
 
         movement.updateMovement(vector2);
     }
