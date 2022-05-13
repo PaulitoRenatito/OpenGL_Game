@@ -1,10 +1,10 @@
 package managers;
 
-import entities.Creature;
-import entities.Entity;
-import entities.Player;
-import entities.Projectile;
+import entities.*;
+import types.Transform;
+import types.Vector2;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -14,8 +14,9 @@ public class World {
     Player player;
     Screen screen;
 
-    public static ArrayList<Entity> entities = new ArrayList<>();
-    public static ArrayList<Creature> creatures = new ArrayList<>();
+    //public static ArrayList<Entity> entities = new ArrayList<>();
+
+    public static ArrayList<Enemy> enemies = new ArrayList<>();
     public static ArrayList<Projectile> projectiles = new ArrayList<>();
 
     private float boundX;
@@ -42,13 +43,63 @@ public class World {
 
     }
 
+    public void spawnEnemies() {
+
+        float spaceBetweenEnemies = screen.getWidth()/4f;
+        int numberOfEnemies = 6;
+
+        for (int i = 1; i <= numberOfEnemies; i++) {
+            Enemy enemy;
+            if (i > 3) {
+                enemy = new Enemy(new Transform(60f,
+                        new Vector2(spaceBetweenEnemies * (i - 3), 800f), new Color(1, 0, 0, 1)), 1);
+            }
+            else {
+                enemy = new Enemy(new Transform(60f,
+                        new Vector2(spaceBetweenEnemies * i * -1, 800f), new Color(1, 0, 0, 1)), 1);
+            }
+            enemies.add(enemy);
+        }
+
+    }
+
+    public void checkCollision() {
+
+        if (projectiles.size() > 0) {
+            for (Projectile projectile : projectiles) {
+                for (Enemy enemy : enemies) {
+                    if(projectile.getTransform().getCollider().collidingWith(enemy))
+                    {
+                        enemy.receiveDamage(1);
+                    }
+                }
+            }
+        }
+
+        for (Enemy enemy : enemies) {
+            if(player.getTransform().getCollider().collidingWith(enemy)) {
+                enemy.receiveDamage(5);
+            }
+        }
+    }
+
+    public void updateEnemies() {
+        for (int i = 0; i < enemies.size(); i++) {
+            if (!(enemies.get(i).isAlive())) {
+                enemies.remove(enemies.get(i));
+            }
+
+            if (enemies.size() > 0) {
+                enemies.get(i).updateMovement();
+            }
+        }
+    }
+
     public void updateProjectiles() {
         if (projectiles.size() > 0) {
             for (int i = 0; i < projectiles.size(); i++) {
                 Projectile projectile = projectiles.get(i);
-                projectile.getTransform().MoveUp(
-                        projectile.getTransform().getPosition(),
-                        projectile.getSpeed());
+                projectile.getTransform().MoveUp(projectile.getSpeed());
                 if (isOutOfScreen(projectile)) {
                     projectiles.remove(projectile);
                 }

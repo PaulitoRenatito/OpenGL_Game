@@ -28,15 +28,9 @@ public class Game {
 
         Player player = new Player(5);
 
-        Enemy enemy1 = new Enemy(new Transform(60f, new Vector2(800f, 800f), new Color(1, 0, 0, 1)), 1);
-        Enemy enemy2 = new Enemy(new Transform(60f, new Vector2(100f, 900f), new Color(1, 0, 0, 1)), 1);
-        Enemy enemy3 = new Enemy(new Transform(60f, new Vector2(-800f, 750f), new Color(1, 0, 0, 1)), 1);
-        Enemy enemy4 = new Enemy(new Transform(60f, new Vector2(-200f, 8200f), new Color(1, 0, 0, 1)), 1);
-        Enemy enemy5 = new Enemy(new Transform(60f, new Vector2(1200f, 900f), new Color(1, 0, 0, 1)), 1);
-
         World world = new World(player, screen);
 
-        Time time = new Time();
+        world.spawnEnemies();
 
         while (!glfwWindowShouldClose(Screen.WINDOW)) {
 
@@ -50,15 +44,13 @@ public class Game {
 
             player.getInputs();
 
-            enemy1.updateMovement();
-            enemy2.updateMovement();
-            enemy3.updateMovement();
-            enemy4.updateMovement();
-            enemy5.updateMovement();
+            world.updateEnemies();
 
             world.updateProjectiles();
+            world.checkCollision();
 
             glfwSwapBuffers(Screen.WINDOW);
+
         }
     }
 
