@@ -35,7 +35,7 @@ public class GameManager {
 
     void writeOnScreen(Vector2 position, Color color, String text)
     {
-        setD
+        
     }
 
     public void getInputs() {
