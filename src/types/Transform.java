@@ -12,11 +12,14 @@ public class Transform {
 
     private Color color;
 
+    private Collider collider;
+
     public Transform() {
 
         size = 60f;
         position = new Vector2();
         color = new Color(1, 1, 1, 1);
+        collider = new Collider(position, size);
 
         glBegin(GL_QUADS);
 
@@ -42,6 +45,7 @@ public class Transform {
         this.size = size;
         this.position = position;
         this.color = color;
+        collider = new Collider(position, size);
 
         glBegin(GL_QUADS);
 
@@ -64,6 +68,8 @@ public class Transform {
 
     public void updateMovement(Vector2 movement) {
 
+        collider.updateCollider(position, size);
+
         glBegin(GL_QUADS);
 
             glColor4f(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
@@ -80,47 +86,51 @@ public class Transform {
 
     }
 
-    public void MoveUp(Vector2 movement, float speed) {
+    public void MoveUp(float speed) {
 
-        movement.incrementY(5f * speed);
+        position.incrementY(5f * speed);
+
+        collider.updateCollider(position, size);
 
         glBegin(GL_QUADS);
 
             glColor4f(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
-            glVertex2f(-size + position.getX(), size + movement.getY());
+            glVertex2f(-size + position.getX(), size + position.getY());
 
 
-            glVertex2f(size + position.getX(), size + movement.getY());
+            glVertex2f(size + position.getX(), size + position.getY());
 
 
-            glVertex2f(size + position.getX(), -size + movement.getY());
+            glVertex2f(size + position.getX(), -size + position.getY());
 
 
-            glVertex2f(-size + position.getX(), -size + movement.getY());
+            glVertex2f(-size + position.getX(), -size + position.getY());
 
         glEnd();
 
     }
 
-    public void MoveDown(Vector2 movement, float speed) {
+    public void MoveDown(float speed) {
 
-        movement.incrementY(-5f * speed);
+        position.incrementY(-5f * speed);
+
+        collider.updateCollider(position, size);
 
         glBegin(GL_QUADS);
 
             glColor4f(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
-            glVertex2f(-size + position.getX(), size + position.getY() + movement.getY());
+            glVertex2f(-size + position.getX(), size + position.getY());
 
 
-            glVertex2f(size + position.getX(), size + position.getY() + movement.getY());
+            glVertex2f(size + position.getX(), size + position.getY());
 
 
-            glVertex2f(size + position.getX(), -size + position.getY() + movement.getY());
+            glVertex2f(size + position.getX(), -size + position.getY());
 
 
-            glVertex2f(-size + position.getX(), -size + position.getY() + movement.getY());
+            glVertex2f(-size + position.getX(), -size + position.getY());
 
         glEnd();
 
@@ -152,5 +162,13 @@ public class Transform {
 
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    public Collider getCollider() {
+        return collider;
+    }
+
+    public void setCollider(Collider collider) {
+        this.collider = collider;
     }
 }
