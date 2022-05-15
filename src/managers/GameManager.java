@@ -1,32 +1,59 @@
 package managers;
 
+import entities.Enemy;
+import entities.Player;
+import entities.Projectile;
+import org.lwjgl.opengl.GL;
 import types.Vector2;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public class GameManager {
+    private static boolean isPaused = false;
 
-    private static GameManager instance = null;
-    public static boolean isPaused = false;
+    private static Screen screen;
 
-    private GameManager() {
+    private static Player player;
 
+    private static LevelManager levelManager;
+
+    public GameManager() {
+
+        createScreen();
+
+        player = new Player(5);
     }
 
-    public static GameManager getInstance() {
+    private void createScreen() {
+        screen = new Screen(1600, 900);
 
-        if (instance == null) {
-            instance = new GameManager();
-        }
+        glfwShowWindow(Screen.WINDOW);
 
-        return instance;
+        glfwMakeContextCurrent(Screen.WINDOW);
+
+        GL.createCapabilities();
     }
 
     public void startGame() {
+        levelManager = new LevelManager();
 
+        createWorld();
+    }
+
+    private void createWorld() {
+        glViewport(0, 0, screen.getWidth(), screen.getHeight());
+        glMatrixMode(GL_PROJECTION);
+        glOrtho(-screen.getWidth(),
+                screen.getWidth(),
+                -screen.getHeight(), screen.getHeight(),
+                -1, 1);
+
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
     }
 
     public void updateGame() {
@@ -35,7 +62,7 @@ public class GameManager {
 
     void writeOnScreen(Vector2 position, Color color, String text)
     {
-        
+
     }
 
     public void getInputs() {
@@ -46,4 +73,35 @@ public class GameManager {
         }
     }
 
+    public static boolean isPaused() {
+        return isPaused;
+    }
+
+    public static void setPaused(boolean isPaused) {
+        GameManager.isPaused = isPaused;
+    }
+
+    public static Screen getScreen() {
+        return screen;
+    }
+
+    public static void setScreen(Screen screen) {
+        GameManager.screen = screen;
+    }
+
+    public static Player getPlayer() {
+        return player;
+    }
+
+    public static void setPlayer(Player player) {
+        GameManager.player = player;
+    }
+
+    public static LevelManager getLevelManager() {
+        return levelManager;
+    }
+
+    public static void setLevelManager(LevelManager levelManager) {
+        GameManager.levelManager = levelManager;
+    }
 }

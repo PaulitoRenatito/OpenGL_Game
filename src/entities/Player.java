@@ -62,11 +62,12 @@ public class Player extends Creature {
             transform.updateMovement(transform.getPosition());
         }
 
-        if (glfwGetMouseButton(Screen.WINDOW, GLFW_MOUSE_BUTTON_1) == GL_TRUE && time > cooldown) {
+        if ((glfwGetMouseButton(Screen.WINDOW, GLFW_MOUSE_BUTTON_1) == GL_TRUE ||
+                glfwGetKey(Screen.WINDOW, GLFW_KEY_SPACE) == GL_TRUE) && time > cooldown) {
             time = 0;
             Projectile projectile = new Projectile(new Transform(20f, new Vector2(transform.getPosition().getX(),
                     transform.getPosition().getY() + transform.getSize()), new Color(0.6f, 0.6f, 0, 1)));
-            World.projectiles.add(projectile);
+            LevelManager.projectiles.add(projectile);
         }
 
         time += 0.1;

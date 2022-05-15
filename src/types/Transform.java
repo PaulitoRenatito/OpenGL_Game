@@ -1,6 +1,9 @@
 package types;
 
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -134,6 +137,42 @@ public class Transform {
 
         glEnd();
 
+    }
+
+    private float timer = 0f;
+
+    private float incrementX = 2.5f;
+
+    public void MoveDownZigZagging(float speed, int switchSideTime) {
+
+        if (timer > switchSideTime) {
+            timer = 0;
+            incrementX *= -1;
+        }
+
+        position.incrementY(-5f * speed);
+        position.incrementX(incrementX * speed);
+
+        collider.updateCollider(position, size);
+
+        glBegin(GL_QUADS);
+
+        glColor4f(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+
+        glVertex2f(-size + position.getX(), size + position.getY());
+
+
+        glVertex2f(size + position.getX(), size + position.getY());
+
+
+        glVertex2f(size + position.getX(), -size + position.getY());
+
+
+        glVertex2f(-size + position.getX(), -size + position.getY());
+
+        glEnd();
+
+        timer += 0.02f;
     }
 
     public void moveTowards(Vector2 target) {

@@ -9,7 +9,7 @@ public class Enemy extends Creature {
     }
 
     public void updateMovement() {
-        this.getTransform().MoveDown(0.3f);
+        this.getTransform().MoveDownZigZagging(0.3f, 3);
     }
 
 }

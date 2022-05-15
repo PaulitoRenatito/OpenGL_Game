@@ -1,10 +1,9 @@
 package types;
 
-import static org.lwjgl.glfw.GLFW.glfwGetTime;
+import javax.swing.*;
+import java.util.TimerTask;
 
 public class Time {
-
-    private float cooldown = 2f;
     private float time = 0f;
 
     public Time() {
@@ -12,7 +11,15 @@ public class Time {
     }
 
 
-    public void waitForSeconds(float seconds) {
+    public boolean waitForSeconds(float seconds) {
+
+        if(time > seconds) {
+            time = 0;
+            return true;
+        }
+        else {
+            return false;
+        }
 
     }
 

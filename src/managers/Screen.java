@@ -4,6 +4,7 @@ import org.lwjgl.glfw.GLFWWindowSizeCallback;
 
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeCallback;
+import static org.lwjgl.opengl.GL11.*;
 
 public class Screen {
 
@@ -18,8 +19,10 @@ public class Screen {
         this.width = width;
         this.height = height;
         aspect = (float)width / (float)height;
-        WINDOW = glfwCreateWindow(width, height, "Window", 0, 0);
+        WINDOW = glfwCreateWindow(width, height, "Ship Wrecker", 0, 0);
     }
+
+
 
     public void resizeScreen() {
 
