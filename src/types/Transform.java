@@ -4,12 +4,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 
 import static org.lwjgl.opengl.GL11.*;
 
 public class Transform {
 
     private float size;
+
+    private boolean startMovingRight = true;
+
+    private float incrementX = 2.5f;
 
     private Vector2 position;
 
@@ -23,6 +28,13 @@ public class Transform {
         position = new Vector2();
         color = new Color(1, 1, 1, 1);
         collider = new Collider(position, size);
+
+//        BufferedImage image = Texture.loadImage("/res/ship1.png");
+//        int textureID = Texture.loadTexture(image);
+//
+//        glEnable(GL_TEXTURE_2D);
+//
+//        glBindTexture(GL_TEXTURE_2D, textureID);
 
         glBegin(GL_QUADS);
 
@@ -40,6 +52,8 @@ public class Transform {
             glVertex2f(-size, -size);
 
         glEnd();
+
+//        glDisable(GL_TEXTURE_2D);
 
     }
 
@@ -141,8 +155,6 @@ public class Transform {
 
     private float timer = 0f;
 
-    private float incrementX = 2.5f;
-
     public void MoveDownZigZagging(float speed, int switchSideTime) {
 
         if (timer > switchSideTime) {
@@ -176,7 +188,26 @@ public class Transform {
     }
 
     public void moveTowards(Vector2 target) {
-        position.increment(target.subtract(position).divided(50f)); // myPosition += (target - myPosition) / 50f
+
+        position.increment(target.subtract(position).divided(80f)); // myPosition += (target - myPosition) / 50f
+
+        glBegin(GL_QUADS);
+
+            glColor4f(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+
+            glVertex2f(-size + position.getX(), size + position.getY());
+
+
+            glVertex2f(size + position.getX(), size + position.getY());
+
+
+            glVertex2f(size + position.getX(), -size + position.getY());
+
+
+            glVertex2f(-size + position.getX(), -size + position.getY());
+
+        glEnd();
+
     }
 
     public float getSize() {
@@ -209,5 +240,27 @@ public class Transform {
 
     public void setCollider(Collider collider) {
         this.collider = collider;
+    }
+
+    public boolean isStartMovingRight() {
+        return startMovingRight;
+    }
+
+    public void setStartMovingRight(boolean startMovingRight) {
+        this.startMovingRight = startMovingRight;
+        if (startMovingRight) {
+            setIncrementX(2.5f);
+        }
+        else {
+            setIncrementX(-2.5f);
+        }
+    }
+
+    public float getIncrementX() {
+        return incrementX;
+    }
+
+    public void setIncrementX(float incrementX) {
+        this.incrementX = incrementX;
     }
 }

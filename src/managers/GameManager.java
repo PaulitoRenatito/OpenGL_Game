@@ -1,13 +1,10 @@
 package managers;
 
-import entities.Enemy;
 import entities.Player;
-import entities.Projectile;
 import org.lwjgl.opengl.GL;
 import types.Vector2;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;

@@ -58,18 +58,24 @@ public class LevelManager {
             float spaceBetweenEnemies = GameManager.getScreen().getWidth()/(numberOfEnemies-2.5f);
 
             if (bossLevel > 0) {
+
+                boolean startMovingRight = false;
+
                 for (int j = 0; j <= bossLevel; j++) {
+                    startMovingRight = !startMovingRight;
                     for (int i = 1; i <= numberOfEnemies; i++) {
                         Enemy enemy;
                         if (i > (numberOfEnemies/2f)) {
                             enemy = new Enemy(new Transform(60f,
                                     new Vector2(spaceBetweenEnemies * ((i - 0.5f) - (numberOfEnemies/2f)), 1000f + (200f * j)),
                                     new Color(1, 0, 0, 1)), 1);
+                            enemy.getTransform().setStartMovingRight(startMovingRight);
                         }
                         else {
                             enemy = new Enemy(new Transform(60f,
                                     new Vector2(spaceBetweenEnemies * (i - 0.5f) * -1, 1000f  + (200f * j)),
                                     new Color(1, 0, 0, 1)), 1);
+                            enemy.getTransform().setStartMovingRight(startMovingRight);
                         }
 
                         enemies.add(enemy);
@@ -93,11 +99,7 @@ public class LevelManager {
                     enemies.add(enemy);
                 }
             }
-
-
-
         }
-
     }
 
     private void checkCollisions() {
@@ -138,15 +140,22 @@ public class LevelManager {
     }
 
     private void updateEnemiesMovement() {
-        for (Enemy enemy : enemies) {
-            enemy.updateMovement();
+        if ((level-1) % 5 == 0) {
+            for (Enemy enemy : enemies) {
+                enemy.getTransform().moveTowards(GameManager.getPlayer().getTransform().getPosition());
+            }
+        }
+        else {
+            for (Enemy enemy : enemies) {
+                enemy.updateMovement();
+            }
         }
     }
 
     private void updateProjectilesMovement() {
         for (int i = 0; i < projectiles.size(); i++) {
             Projectile projectile = projectiles.get(i);
-            projectile.getTransform().MoveUp(projectile.getSpeed());
+            projectile.updateMovement();
             if (isOutOfScreen(projectile)) {
                 projectiles.remove(projectile);
             }
