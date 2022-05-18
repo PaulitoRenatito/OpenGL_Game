@@ -1,5 +1,4 @@
 package managers;
-import entities.Creature;
 import entities.Enemy;
 import entities.Projectile;
 import types.Transform;
@@ -142,7 +141,8 @@ public class LevelManager {
     private void updateEnemiesMovement() {
         if ((level-1) % 5 == 0) {
             for (Enemy enemy : enemies) {
-                enemy.getTransform().moveTowards(GameManager.getPlayer().getTransform().getPosition());
+                //enemy.getTransform().moveTowards(GameManager.getPlayer().getTransform().getPosition());
+                enemy.updateMovement();
             }
         }
         else {
@@ -165,14 +165,17 @@ public class LevelManager {
     private boolean isOutOfScreen(Projectile projectile) {
 
         int boundY = GameManager.getScreen().getHeight();
+        Vector2 projectilePosition = projectile.getTransform().getPosition();
+        float projectileSize = projectile.getTransform().getSize();
 
-        if (projectile.getTransform().getPosition().getY() + projectile.getTransform().getSize() > boundY ||
-                projectile.getTransform().getPosition().getY() - projectile.getTransform().getSize() < -boundY) {
+        if (projectilePosition.getY() +  projectileSize > boundY ||
+                projectilePosition.getY() - projectileSize < -boundY) {
             return true;
         }
         else {
             return false;
         }
+
     }
 
     public void limitBounds() {

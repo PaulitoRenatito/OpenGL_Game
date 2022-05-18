@@ -1,7 +1,5 @@
 package entities;
 
-import entities.Entity;
-
 
 import types.*;
 
