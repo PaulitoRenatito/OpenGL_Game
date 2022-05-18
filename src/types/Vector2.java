@@ -36,6 +36,13 @@ public class Vector2 {
         return vectorResultant;
     }
 
+    public Vector2 multiply(float scalar) {
+        Vector2 vectorResultant = new Vector2();
+        vectorResultant.x = x * scalar;
+        vectorResultant.y = y * scalar;
+        return vectorResultant;
+    }
+
     public void increment(Vector2 vector) {
         x = x + vector.x;
         y = y + vector.y;

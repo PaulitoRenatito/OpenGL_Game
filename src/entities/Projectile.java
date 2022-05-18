@@ -1,18 +1,24 @@
 package entities;
-
-import entities.Entity;
 import types.*;
 
 public class Projectile extends Entity {
 
-    // private float speed = 0.6f;
+    private boolean movingUp = true;
 
-    // private types.Transform transform;
-
-    public Projectile(Transform transform) {
+    public Projectile(Transform transform, float speed, boolean movingUp) {
         super(transform);
         this.transform = transform;
-        setSpeed(6f);
+        this.movingUp = movingUp;
+        setSpeed(speed);
+    }
+
+    public void updateMovement() {
+        if (movingUp) {
+            getTransform().MoveUp(getSpeed());
+        }
+        else {
+            getTransform().MoveDown(getSpeed());
+        }
     }
 
 }
