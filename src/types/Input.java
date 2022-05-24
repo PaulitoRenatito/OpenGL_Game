@@ -1,6 +1,5 @@
 package types;
-
-import managers.Screen;
+import managers.Window;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.GL_TRUE;
@@ -9,48 +8,41 @@ public class Input {
 
     private static boolean pressing = false;
 
+    private static boolean keys[] = new boolean[KeyCode.values().length];
+
     public static boolean GetKey(KeyCode keyCode) {
-        return glfwGetKey(Screen.WINDOW, keyCode.getValue()) == GL_TRUE;
+        return glfwGetKey(Window.WINDOW, keyCode.getValue()) == GL_TRUE;
     }
 
     public static boolean GetKeyDown(KeyCode keyCode) {
 
-        if (!GetKey(keyCode)) {
-            pressing = false;
-            return false;
-        }
-        else {
-            if (pressing) {
-                return false;
-            }
-            else {
-                pressing = true;
-                return true;
-            }
-        }
+        return (GetKey(keyCode) && !keys[keyCode.ordinal()]);
 
     }
 
     public static boolean GetKeyUp(KeyCode keyCode) {
 
-        if (GetKey(keyCode)) {
-            pressing = true;
-            return false;
-        }
-        else {
-            if (pressing) {
-                pressing = false;
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
+        return (!GetKey(keyCode) && keys[keyCode.ordinal()]);
 
     }
 
     public static boolean GetMouseButton(KeyCode keyCode) {
-        return glfwGetMouseButton(Screen.WINDOW, keyCode.getValue()) == GL_TRUE;
+        return glfwGetMouseButton(Window.WINDOW, keyCode.getValue()) == GL_TRUE;
     }
 
+    public static boolean GetMouseButtonDown(KeyCode keyCode) {
+        return (GetMouseButton(keyCode) && !keys[keyCode.ordinal()]);
+    }
+
+    public static boolean GetMouseButtonUp(KeyCode keyCode) {
+        return (!GetMouseButton(keyCode) && keys[keyCode.ordinal()]);
+    }
+
+    public static void update() {
+        int i = 0;
+        for (KeyCode key: KeyCode.values()) {
+            keys[i] = GetKey(key);
+            i++;
+        }
+    }
 }

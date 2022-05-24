@@ -2,8 +2,8 @@ package main;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-
 import managers.*;
+import org.lwjgl.opengl.GL;
 import types.Timer;
 
 public class Game {
@@ -29,7 +29,7 @@ public class Game {
 
         double unprocessed = 0;
 
-        while (!glfwWindowShouldClose(Screen.WINDOW)) {
+        while (!GameManager.getWindow().shouldClose()) {
 
             boolean camRender = false;
 
@@ -48,24 +48,27 @@ public class Game {
 
                 camRender = true;
 
+                gameManager.registerCallBacks();
+
+                gameManager.getInputs();
                 glfwPollEvents();
 
                 if (frame_time >= 1.0) {
                     frame_time = 0;
-                    System.out.println("FPS: " + fps);
+                    // System.out.println("FPS: " + fps);
                     fps = 0;
                 }
 
             }
 
-            if (camRender) {
+            if (camRender && !GameManager.isPaused()) {
                 glClear(GL_COLOR_BUFFER_BIT);
 
                 GameManager.getPlayer().getInputs();
 
                 GameManager.getLevelManager().updateLevel();
 
-                glfwSwapBuffers(Screen.WINDOW);
+                GameManager.getWindow().swapBuffers();
 
                 fps++;
             }

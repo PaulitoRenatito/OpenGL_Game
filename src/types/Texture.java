@@ -1,65 +1,62 @@
 package types;
 
-
-import main.Game;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL12;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.Objects;
 
 import static org.lwjgl.opengl.GL11.*;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 
 public class Texture {
 
-    private static final int BYTES_PER_PIXEL = 4;
+    private int id;
+    private int width;
+    private int height;
 
-    public static int loadTexture(BufferedImage image) {
-        int[] pixels = new int[image.getWidth() * image.getHeight()];
-        image.getRGB(0, 0, image.getWidth(), image.getHeight(), pixels, 0, image.getWidth());
+    public Texture(String fileName) {
+        BufferedImage bi;
+        try{
+            bi = ImageIO.read(new File(fileName));
+            width = bi.getWidth();
+            height = bi.getHeight();
 
-        ByteBuffer buffer = BufferUtils.createByteBuffer(image.getWidth() * image.getHeight() * BYTES_PER_PIXEL);
+            int[] pixels_raw = new int[width * height * 4];
+            pixels_raw = bi.getRGB(0, 0, width, height, null, 0, width);
 
-        for (int i = 0; i < image.getHeight(); i++) {
-            for (int j = 0; j < image.getWidth(); j++) {
-                int pixel = pixels[i * image.getWidth() * j];
-                buffer.put((byte) ((pixel >> 16) & 0xFF));
-                buffer.put((byte) ((pixel >> 8) & 0xFF));
-                buffer.put((byte) (pixel & 0xFF));
-                buffer.put((byte) ((pixel >> 24) & 0xFF));
+
+            ByteBuffer pixels = BufferUtils.createByteBuffer(width * height * 4);
+
+            for (int i = 0; i < width; i++) {
+                for (int j = 0; j < height; j++) {
+                    int pixel = pixels_raw[i * width + 4];
+                    pixels.put((byte) ((pixel >> 16) & 0xFF));
+                    pixels.put((byte) ((pixel >> 8) & 0xFF));
+                    pixels.put((byte) (pixel & 0xFF));
+                    pixels.put((byte) ((pixel >> 24) & 0xFF));
+                }
             }
-        }
 
-        buffer.flip();
+            pixels.flip();
 
-        int textureID = glGenTextures();
-        glBindTexture(GL_TEXTURE_2D, textureID);
+            id = glGenTextures();
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+            glBindTexture(GL_TEXTURE_2D, id);
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 
-        return textureID;
-
-    }
-
-    public static BufferedImage loadImage(String imagePath) {
-        try {
-            return ImageIO.read(Game.class.getResource(imagePath));
         }
         catch (IOException e) {
-            System.out.println("Error to find: " + imagePath);
-            System.out.println("Error: " + e);
+            e.printStackTrace();
         }
+    }
 
-        return null;
+    public void bind() {
+        glBindTexture(GL_TEXTURE_2D, id);
     }
 
 }

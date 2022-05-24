@@ -54,7 +54,7 @@ public class LevelManager {
 
             numberOfEnemies += 2;
 
-            float spaceBetweenEnemies = GameManager.getScreen().getWidth()/(numberOfEnemies-2.5f);
+            float spaceBetweenEnemies = GameManager.getWindow().getWidth()/(numberOfEnemies-2.5f);
 
             if (bossLevel > 0) {
 
@@ -148,6 +148,9 @@ public class LevelManager {
         else {
             for (Enemy enemy : enemies) {
                 enemy.updateMovement();
+                if (GameManager.getWindow().isBelowTheScreen(enemy)) {
+                    GameManager.gameOver = true;
+                }
             }
         }
     }
@@ -156,32 +159,16 @@ public class LevelManager {
         for (int i = 0; i < projectiles.size(); i++) {
             Projectile projectile = projectiles.get(i);
             projectile.updateMovement();
-            if (isOutOfScreen(projectile)) {
+            if (GameManager.getWindow().isOutOfScreen(projectile)) {
                 projectiles.remove(projectile);
             }
         }
     }
 
-    private boolean isOutOfScreen(Projectile projectile) {
-
-        int boundY = GameManager.getScreen().getHeight();
-        Vector2 projectilePosition = projectile.getTransform().getPosition();
-        float projectileSize = projectile.getTransform().getSize();
-
-        if (projectilePosition.getY() +  projectileSize > boundY ||
-                projectilePosition.getY() - projectileSize < -boundY) {
-            return true;
-        }
-        else {
-            return false;
-        }
-
-    }
-
     public void limitBounds() {
 
-        int boundX = GameManager.getScreen().getWidth();
-        int boundY = GameManager.getScreen().getHeight();
+        int boundX = GameManager.getWindow().getWidth();
+        int boundY = GameManager.getWindow().getHeight();
 
         Vector2 playerPosition = GameManager.getPlayer().getTransform().getPosition();
         float playerSize = GameManager.getPlayer().getTransform().getSize();

@@ -1,10 +1,5 @@
 package types;
-
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -22,6 +17,8 @@ public class Transform {
 
     private Collider collider;
 
+    private Texture texture = new Texture("res/ship1.png");
+
     public Transform() {
 
         size = 60f;
@@ -29,31 +26,30 @@ public class Transform {
         color = new Color(1, 1, 1, 1);
         collider = new Collider(position, size);
 
-//        BufferedImage image = Texture.loadImage("/res/ship1.png");
-//        int textureID = Texture.loadTexture(image);
-//
-//        glEnable(GL_TEXTURE_2D);
-//
-//        glBindTexture(GL_TEXTURE_2D, textureID);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glEnable(GL_TEXTURE_2D);
+        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 
+        texture.bind();
+
+        glColor3f(1, 1, 1);
         glBegin(GL_QUADS);
 
-            glColor4f(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        glTexCoord2f(0, 0);
+        glVertex2f(-size, size);
 
-            glVertex2f(-size, size);
+        glTexCoord2f(1, 0);
+        glVertex2f(size, size);
 
+        glTexCoord2f(1, 1);
+        glVertex2f(size, -size);
 
-            glVertex2f(size, size);
-
-
-            glVertex2f(size, -size);
-
-
-            glVertex2f(-size, -size);
+        glTexCoord2f(0, 1);
+        glVertex2f(-size, -size);
 
         glEnd();
 
-//        glDisable(GL_TEXTURE_2D);
+        glDisable(GL_TEXTURE_2D);
 
     }
 
@@ -80,6 +76,42 @@ public class Transform {
             glVertex2f(-size + position.getX(), -size + position.getY());
 
         glEnd();
+
+    }
+
+    public void updateMovementPlayer(Vector2 movement) {
+
+        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+
+        glClear(GL_COLOR_BUFFER_BIT);
+        glEnable(GL_BLEND);
+        glEnable(GL_TEXTURE_2D);
+
+
+        texture.bind();
+
+        collider.updateCollider(position, size);
+
+        glColor3f(1, 1, 1);
+
+        glBegin(GL_QUADS);
+
+        glTexCoord2f(0, 0);
+        glVertex2f(-size + movement.getX(), size + movement.getY());
+
+        glTexCoord2f(1, 0);
+        glVertex2f(size + movement.getX(), size + movement.getY());
+
+        glTexCoord2f(1, 1);
+        glVertex2f(size + movement.getX(), -size + movement.getY());
+
+        glTexCoord2f(0, 1);
+        glVertex2f(-size + movement.getX(), -size + movement.getY());
+
+        glEnd();
+
+        glDisable(GL_TEXTURE_2D);
+        glDisable(GL_BLEND);
 
     }
 
