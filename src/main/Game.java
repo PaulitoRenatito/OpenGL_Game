@@ -64,7 +64,7 @@ public class Game {
             if (camRender && !GameManager.isPaused()) {
                 glClear(GL_COLOR_BUFFER_BIT);
 
-                GameManager.getPlayer().getInputs();
+                // GameManager.getPlayer().getInputs();
 
                 GameManager.getLevelManager().updateLevel();
 

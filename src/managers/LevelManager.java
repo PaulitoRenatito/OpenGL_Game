@@ -1,11 +1,16 @@
 package managers;
 import entities.Enemy;
+import entities.Player;
 import entities.Projectile;
+import types.Sprite;
 import types.Transform;
 import types.Vector2;
 
 import java.awt.*;
 import java.util.ArrayList;
+
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.glEnd;
 
 public class LevelManager {
 
@@ -19,11 +24,21 @@ public class LevelManager {
 
     public static ArrayList<Projectile> projectiles = new ArrayList<>();
 
+    private Sprite sprite = new Sprite("res/background.png");
+
     public LevelManager() {
 
     }
 
     public void updateLevel() {
+
+        updateBackground();
+
+        if (GameManager.getPlayer() == null) {
+            GameManager.setPlayer(new Player(5));
+        }
+
+        GameManager.getPlayer().getInputs();
 
         if(enemies.size() == 0) {
             spawnEnemies();
@@ -40,11 +55,38 @@ public class LevelManager {
 
     }
 
+    private void updateBackground() {
+
+        sprite.enableImage();
+
+        glBindTexture(GL_TEXTURE_2D, sprite.getId());
+
+        glColor3f(1, 1, 1);
+
+        glBegin(GL_QUADS);
+
+        glTexCoord2f(0, 0);
+        glVertex3f(-GameManager.getWindow().getWidth(), -GameManager.getWindow().getHeight(), -1);
+
+        glTexCoord2f(1, 0);
+        glVertex3f(GameManager.getWindow().getWidth(), -GameManager.getWindow().getHeight(), -1);
+
+        glTexCoord2f(1, 1);
+        glVertex3f(GameManager.getWindow().getWidth(), GameManager.getWindow().getHeight(), -1);
+
+        glTexCoord2f(0, 1);
+        glVertex3f(-GameManager.getWindow().getWidth(), GameManager.getWindow().getHeight(), -1);
+
+        glEnd();
+
+        sprite.disableImage();
+    }
+
     private void spawnEnemies() {
 
         if (level % 5 == 0) {
             Enemy enemy = new Enemy(new Transform(60f,
-                    new Vector2(0f, 1000f), new Color(1, 0, 0, 1)), 5 * (level/5));
+                    new Vector2(0f, 1000f), new Sprite("res/ship3.png")), 5 * (level/5));
             enemies.add(enemy);
 
             bossLevel++;
@@ -67,13 +109,13 @@ public class LevelManager {
                         if (i > (numberOfEnemies/2f)) {
                             enemy = new Enemy(new Transform(60f,
                                     new Vector2(spaceBetweenEnemies * ((i - 0.5f) - (numberOfEnemies/2f)), 1000f + (200f * j)),
-                                    new Color(1, 0, 0, 1)), 1);
+                                    new Sprite("res/ship2.png")), 1);
                             enemy.getTransform().setStartMovingRight(startMovingRight);
                         }
                         else {
                             enemy = new Enemy(new Transform(60f,
                                     new Vector2(spaceBetweenEnemies * (i - 0.5f) * -1, 1000f  + (200f * j)),
-                                    new Color(1, 0, 0, 1)), 1);
+                                    new Sprite("res/ship2.png")), 1);
                             enemy.getTransform().setStartMovingRight(startMovingRight);
                         }
 
@@ -87,12 +129,12 @@ public class LevelManager {
                     if (i > (numberOfEnemies/2f)) {
                         enemy = new Enemy(new Transform(60f,
                                 new Vector2(spaceBetweenEnemies * (i - (numberOfEnemies/2f)), 800f + (100f * bossLevel)),
-                                new Color(1, 0, 0, 1)), 1);
+                                new Sprite("res/ship2.png")), 1);
                     }
                     else {
                         enemy = new Enemy(new Transform(60f,
                                 new Vector2(spaceBetweenEnemies * i * -1, 800f  + (100f * bossLevel)),
-                                new Color(1, 0, 0, 1)), 1);
+                                new Sprite("res/ship2.png")), 1);
                     }
 
                     enemies.add(enemy);
@@ -141,8 +183,7 @@ public class LevelManager {
     private void updateEnemiesMovement() {
         if ((level-1) % 5 == 0) {
             for (Enemy enemy : enemies) {
-                //enemy.getTransform().moveTowards(GameManager.getPlayer().getTransform().getPosition());
-                enemy.updateMovement();
+                enemy.updateMovement(0.3f, 0.6f , 5);
             }
         }
         else {

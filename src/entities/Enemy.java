@@ -14,4 +14,8 @@ public class Enemy extends Creature {
         this.getTransform().MoveDownZigZagging(0.3f, 3);
     }
 
+    public void updateMovement(float speed,float zigzagSpeed, int switchSideTime) {
+        this.getTransform().MoveDownZigZagging(speed, zigzagSpeed, switchSideTime);
+    }
+
 }

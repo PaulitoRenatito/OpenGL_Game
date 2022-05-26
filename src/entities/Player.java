@@ -18,22 +18,22 @@ public class Player extends Creature {
         if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.ARROW_LEFT)) {
             movementX = 1;
             transform.getPosition().incrementX(-getSpeed()/(movementX + movementY));
-            transform.updateMovementPlayer(transform.getPosition());
+            transform.updateMovement(transform.getPosition());
         }
         else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.ARROW_RIGHT)) {
             movementX = 1;
             transform.getPosition().incrementX(getSpeed()/(movementX + movementY));
-            transform.updateMovementPlayer(transform.getPosition());
+            transform.updateMovement(transform.getPosition());
         }
         if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.ARROW_DOWN))  {
             movementY = 1;
             transform.getPosition().incrementY(-getSpeed()/(movementX + movementY));
-            transform.updateMovementPlayer(transform.getPosition());
+            transform.updateMovement(transform.getPosition());
         }
         else if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.ARROW_UP)) {
             movementY = 1;
             transform.getPosition().incrementY(getSpeed()/(movementX + movementY));
-            transform.updateMovementPlayer(transform.getPosition());
+            transform.updateMovement(transform.getPosition());
         }
 
         if ((Input.GetMouseButton(KeyCode.LEFT_BUTTON) || Input.GetKey(KeyCode.SPACE)) && weapon.canFire()) {
@@ -42,7 +42,7 @@ public class Player extends Creature {
 
         weapon.updateTime();
 
-        transform.updateMovementPlayer(transform.getPosition());
+        transform.updateMovement(transform.getPosition());
     }
 
 }

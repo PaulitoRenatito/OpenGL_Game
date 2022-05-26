@@ -4,6 +4,7 @@ import entities.Player;
 import org.lwjgl.opengl.GL;
 import types.Input;
 import types.KeyCode;
+import types.Sprite;
 import types.Vector2;
 
 import java.awt.*;
@@ -26,7 +27,6 @@ public class GameManager {
 
         createWindow();
 
-        player = new Player(5);
     }
 
     private void createWindow() {
@@ -39,6 +39,7 @@ public class GameManager {
         levelManager = new LevelManager();
 
         createWorld();
+
     }
 
     private void createWorld() {

@@ -15,9 +15,9 @@ public class Transform {
 
     private Color color;
 
-    private Collider collider;
+    private Sprite sprite;
 
-    private Texture texture = new Texture("res/ship1.png");
+    private Collider collider;
 
     public Transform() {
 
@@ -25,93 +25,63 @@ public class Transform {
         position = new Vector2();
         color = new Color(1, 1, 1, 1);
         collider = new Collider(position, size);
+        sprite = new Sprite("res/ship1.png");
 
-        glClear(GL_COLOR_BUFFER_BIT);
-        glEnable(GL_TEXTURE_2D);
-        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+        // glClear(GL_COLOR_BUFFER_BIT);
 
-        texture.bind();
+        sprite.enableImage();
+
+        glBindTexture(GL_TEXTURE_2D, sprite.getId());
 
         glColor3f(1, 1, 1);
         glBegin(GL_QUADS);
 
         glTexCoord2f(0, 0);
-        glVertex2f(-size, size);
+        glVertex3f(-size, size, 0);
 
         glTexCoord2f(1, 0);
-        glVertex2f(size, size);
+        glVertex3f(size, size, 0);
 
         glTexCoord2f(1, 1);
-        glVertex2f(size, -size);
+        glVertex3f(size, -size, 0);
 
         glTexCoord2f(0, 1);
-        glVertex2f(-size, -size);
+        glVertex3f(-size, -size, 0);
 
         glEnd();
 
-        glDisable(GL_TEXTURE_2D);
+        sprite.disableImage();
 
     }
 
-    public Transform(float size, Vector2 position, Color color) {
+    public Transform(float size, Vector2 position, Sprite sprite) {
 
         this.size = size;
         this.position = position;
-        this.color = color;
+        this.sprite = sprite;
         collider = new Collider(position, size);
 
-        glBegin(GL_QUADS);
+        this.sprite.enableImage();
 
-            glColor4f(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-
-            glVertex2f(-size + position.getX(), size + position.getY());
-
-
-            glVertex2f(size + position.getX(), size + position.getY());
-
-
-            glVertex2f(size + position.getX(), -size + position.getY());
-
-
-            glVertex2f(-size + position.getX(), -size + position.getY());
-
-        glEnd();
-
-    }
-
-    public void updateMovementPlayer(Vector2 movement) {
-
-        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-
-        glClear(GL_COLOR_BUFFER_BIT);
-        glEnable(GL_BLEND);
-        glEnable(GL_TEXTURE_2D);
-
-
-        texture.bind();
-
-        collider.updateCollider(position, size);
-
-        glColor3f(1, 1, 1);
+        glBindTexture(GL_TEXTURE_2D, sprite.getId());
 
         glBegin(GL_QUADS);
 
         glTexCoord2f(0, 0);
-        glVertex2f(-size + movement.getX(), size + movement.getY());
+        glVertex3f(-size + position.getX(), size + position.getY(), 0);
 
         glTexCoord2f(1, 0);
-        glVertex2f(size + movement.getX(), size + movement.getY());
+        glVertex3f(size + position.getX(), size + position.getY(), 0);
 
         glTexCoord2f(1, 1);
-        glVertex2f(size + movement.getX(), -size + movement.getY());
+        glVertex3f(size + position.getX(), -size + position.getY(), 0);
 
         glTexCoord2f(0, 1);
-        glVertex2f(-size + movement.getX(), -size + movement.getY());
+        glVertex3f(-size + position.getX(), -size + position.getY(), 0);
 
         glEnd();
 
-        glDisable(GL_TEXTURE_2D);
-        glDisable(GL_BLEND);
+        this.sprite.disableImage();
 
     }
 
@@ -119,20 +89,31 @@ public class Transform {
 
         collider.updateCollider(position, size);
 
+        // glClear(GL_COLOR_BUFFER_BIT);
+
+        glColor3f(1, 1, 1);
+
+        sprite.enableImage();
+
+        glBindTexture(GL_TEXTURE_2D, sprite.getId());
+
         glBegin(GL_QUADS);
 
-            glColor4f(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        glTexCoord2f(0, 0);
+        glVertex3f(-size + movement.getX(), size + movement.getY(), 0);
 
-            glVertex2f(-size + movement.getX(), size + movement.getY());
+        glTexCoord2f(1, 0);
+        glVertex3f(size + movement.getX(), size + movement.getY(), 0);
 
-            glVertex2f(size + movement.getX(), size + movement.getY());
+        glTexCoord2f(1, 1);
+        glVertex3f(size + movement.getX(), -size + movement.getY(), 0);
 
-            glVertex2f(size + movement.getX(), -size + movement.getY());
-
-            glVertex2f(-size + movement.getX(), -size + movement.getY());
+        glTexCoord2f(0, 1);
+        glVertex3f(-size + movement.getX(), -size + movement.getY(), 0);
 
         glEnd();
 
+        sprite.disableImage();
     }
 
     public void MoveUp(float speed) {
@@ -141,22 +122,29 @@ public class Transform {
 
         collider.updateCollider(position, size);
 
+        glColor3f(1, 1, 1);
+
+        sprite.enableImage();
+
+        glBindTexture(GL_TEXTURE_2D, sprite.getId());
+
         glBegin(GL_QUADS);
 
-            glColor4f(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        glTexCoord2f(0, 0);
+        glVertex2f(-size + position.getX(), size + position.getY());
 
-            glVertex2f(-size + position.getX(), size + position.getY());
+        glTexCoord2f(1, 0);
+        glVertex2f(size + position.getX(), size + position.getY());
 
+        glTexCoord2f(1, 1);
+        glVertex2f(size + position.getX(), -size + position.getY());
 
-            glVertex2f(size + position.getX(), size + position.getY());
-
-
-            glVertex2f(size + position.getX(), -size + position.getY());
-
-
-            glVertex2f(-size + position.getX(), -size + position.getY());
+        glTexCoord2f(0, 1);
+        glVertex2f(-size + position.getX(), -size + position.getY());
 
         glEnd();
+
+        sprite.disableImage();
 
     }
 
@@ -166,22 +154,29 @@ public class Transform {
 
         collider.updateCollider(position, size);
 
+        glColor3f(1, 1, 1);
+
+        sprite.enableImage();
+
+        glBindTexture(GL_TEXTURE_2D, sprite.getId());
+
         glBegin(GL_QUADS);
 
-            glColor4f(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        glTexCoord2f(0, 0);
+        glVertex2f(-size + position.getX(), size + position.getY());
 
-            glVertex2f(-size + position.getX(), size + position.getY());
+        glTexCoord2f(1, 0);
+        glVertex2f(size + position.getX(), size + position.getY());
 
+        glTexCoord2f(1, 1);
+        glVertex2f(size + position.getX(), -size + position.getY());
 
-            glVertex2f(size + position.getX(), size + position.getY());
-
-
-            glVertex2f(size + position.getX(), -size + position.getY());
-
-
-            glVertex2f(-size + position.getX(), -size + position.getY());
+        glTexCoord2f(0, 1);
+        glVertex2f(-size + position.getX(), -size + position.getY());
 
         glEnd();
+
+        sprite.disableImage();
 
     }
 
@@ -199,22 +194,68 @@ public class Transform {
 
         collider.updateCollider(position, size);
 
+        glColor3f(1, 1, 1);
+
+        sprite.enableImage();
+
+        glBindTexture(GL_TEXTURE_2D, sprite.getId());
+
         glBegin(GL_QUADS);
 
-        glColor4f(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-
+        glTexCoord2f(0, 0);
         glVertex2f(-size + position.getX(), size + position.getY());
 
-
+        glTexCoord2f(1, 0);
         glVertex2f(size + position.getX(), size + position.getY());
 
-
+        glTexCoord2f(1, 1);
         glVertex2f(size + position.getX(), -size + position.getY());
 
-
+        glTexCoord2f(0, 1);
         glVertex2f(-size + position.getX(), -size + position.getY());
 
         glEnd();
+
+        sprite.disableImage();
+
+        timer += 0.02f;
+    }
+
+    public void MoveDownZigZagging(float speed, float zigzagSpeed, int switchSideTime) {
+
+        if (timer > switchSideTime) {
+            timer = 0;
+            incrementX *= -1;
+        }
+
+        position.incrementY(-5f * speed);
+        position.incrementX(incrementX * zigzagSpeed);
+
+        collider.updateCollider(position, size);
+
+        glColor3f(1, 1, 1);
+
+        sprite.enableImage();
+
+        glBindTexture(GL_TEXTURE_2D, sprite.getId());
+
+        glBegin(GL_QUADS);
+
+        glTexCoord2f(0, 0);
+        glVertex2f(-size + position.getX(), size + position.getY());
+
+        glTexCoord2f(1, 0);
+        glVertex2f(size + position.getX(), size + position.getY());
+
+        glTexCoord2f(1, 1);
+        glVertex2f(size + position.getX(), -size + position.getY());
+
+        glTexCoord2f(0, 1);
+        glVertex2f(-size + position.getX(), -size + position.getY());
+
+        glEnd();
+
+        sprite.disableImage();
 
         timer += 0.02f;
     }
