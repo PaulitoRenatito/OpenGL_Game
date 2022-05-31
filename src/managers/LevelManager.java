@@ -1,13 +1,12 @@
 package managers;
-import entities.Enemy;
-import entities.Player;
-import entities.Projectile;
+import entities.*;
 import main.Game;
 import types.GameState;
 import types.Sprite;
 import types.Transform;
 import types.Vector2;
 import java.util.ArrayList;
+import java.util.Random;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.glEnd;
@@ -65,17 +64,20 @@ public class LevelManager {
 
         glBegin(GL_QUADS);
 
+        double width = 1920f / GameManager.getWindow().getNewWidth();
+        double height = 1080f / GameManager.getWindow().getNewHeight();
+
         glTexCoord2f(0, 0);
-        glVertex3f(-GameManager.getWindow().getWidth(), -GameManager.getWindow().getHeight(), -1);
+        glVertex3d(-width, -height, -1);
 
         glTexCoord2f(1, 0);
-        glVertex3f(GameManager.getWindow().getWidth(), -GameManager.getWindow().getHeight(), -1);
+        glVertex3d(width, -height, -1);
 
         glTexCoord2f(1, 1);
-        glVertex3f(GameManager.getWindow().getWidth(), GameManager.getWindow().getHeight(), -1);
+        glVertex3d(width, height, -1);
 
         glTexCoord2f(0, 1);
-        glVertex3f(-GameManager.getWindow().getWidth(), GameManager.getWindow().getHeight(), -1);
+        glVertex3d(-width, height, -1);
 
         glEnd();
 
@@ -84,9 +86,11 @@ public class LevelManager {
 
     private void spawnEnemies() {
 
+        float spawnY = GameManager.getWindow().getHeight();
+
         if (level % 5 == 0) {
-            Enemy enemy = new Enemy(new Transform(200f,
-                    new Vector2(0f, 1000f), new Sprite("res/ship3.png")), 10 * (level/5));
+            Enemy enemy = new Boss(new Transform(200f,
+                    new Vector2(-(GameManager.getWindow().getHeight()*1000/1600f), spawnY), new Sprite("res/ship3.png")), 10 * (level/5));
             enemies.add(enemy);
 
             bossLevel++;
@@ -98,6 +102,9 @@ public class LevelManager {
 
             float spaceBetweenEnemies = GameManager.getWindow().getWidth()/(numberOfEnemies-2.5f);
 
+            Random random = new Random();
+            boolean kamiKaze = random.nextBoolean();
+
             if (bossLevel > 0) {
 
                 boolean startMovingRight = false;
@@ -108,13 +115,13 @@ public class LevelManager {
                         Enemy enemy;
                         if (i > (numberOfEnemies/2f)) {
                             enemy = new Enemy(new Transform(60f,
-                                    new Vector2(spaceBetweenEnemies * ((i - 0.5f) - (numberOfEnemies/2f)), 1000f + (200f * j)),
+                                    new Vector2(spaceBetweenEnemies * ((i - 0.5f) - (numberOfEnemies/2f)), spawnY + (200f * j)),
                                     new Sprite("res/ship2.png")), 1);
                             enemy.getTransform().setStartMovingRight(startMovingRight);
                         }
                         else {
                             enemy = new Enemy(new Transform(60f,
-                                    new Vector2(spaceBetweenEnemies * (i - 0.5f) * -1, 1000f  + (200f * j)),
+                                    new Vector2((spaceBetweenEnemies * (i - 0.5f) * -1) - (spaceBetweenEnemies/3.4f), spawnY  + (200f * j)),
                                     new Sprite("res/ship2.png")), 1);
                             enemy.getTransform().setStartMovingRight(startMovingRight);
                         }
@@ -122,18 +129,26 @@ public class LevelManager {
                         enemies.add(enemy);
                     }
                 }
+
+                if (kamiKaze) {
+                    Enemy enemy = new KamiKaze(new Transform(60f,
+                            new Vector2(0, spawnY * 2),
+                            new Sprite("res/ship4.png")), 1);
+                    enemies.add(enemy);
+                }
+
             }
             else {
                 for (int i = 1; i <= numberOfEnemies; i++) {
                     Enemy enemy;
                     if (i > (numberOfEnemies/2f)) {
                         enemy = new Enemy(new Transform(60f,
-                                new Vector2(spaceBetweenEnemies * (i - (numberOfEnemies/2f)), 800f + (100f * bossLevel)),
+                                new Vector2(spaceBetweenEnemies * (i - (numberOfEnemies/2f)), spawnY + (100f * bossLevel)),
                                 new Sprite("res/ship2.png")), 1);
                     }
                     else {
                         enemy = new Enemy(new Transform(60f,
-                                new Vector2(spaceBetweenEnemies * i * -1, 800f  + (100f * bossLevel)),
+                                new Vector2((spaceBetweenEnemies * i * -1) - (spaceBetweenEnemies/3.4f), spawnY  + (100f * bossLevel)),
                                 new Sprite("res/ship2.png")), 1);
                     }
 
@@ -154,7 +169,11 @@ public class LevelManager {
                 for (Enemy enemy : enemies) {
                     if (projectile.getTransform().getCollider().collidingWith(enemy)) {
 
-                        enemy.receiveDamage(1);
+                        enemy.receiveDamage(projectile.getDamage());
+
+                        if (enemy instanceof Boss boss) {
+                            boss.getTransform().getCollider().onCollide(boss.getTransform());
+                        }
 
                         if (!enemy.isAlive()) {
                             removeEnemy = enemy;
@@ -168,7 +187,8 @@ public class LevelManager {
             else {
                 if (projectile.getTransform().getCollider().collidingWith(GameManager.getPlayer())) {
 
-                    GameManager.getPlayer().receiveDamage(1);
+                    GameManager.getPlayer().receiveDamage(projectile.getDamage());
+                    GameManager.getPlayer().getTransform().getCollider().onCollide(GameManager.getPlayer().getTransform());
 
                     if (!GameManager.getPlayer().isAlive()) {
                         Game.GAME_STATE = GameState.GAME_OVER;
@@ -192,7 +212,13 @@ public class LevelManager {
         for (Enemy enemy : enemies) {
             if(GameManager.getPlayer().getTransform().getCollider().collidingWith(enemy)) {
 
-                GameManager.getPlayer().receiveDamage(1);
+                if (enemy instanceof Boss || enemy instanceof KamiKaze) {
+                    GameManager.getPlayer().receiveDamage(5);
+                }
+                else {
+                    GameManager.getPlayer().receiveDamage(1);
+                    GameManager.getPlayer().getTransform().getCollider().onCollide(GameManager.getPlayer().getTransform());
+                }
 
                 if (!GameManager.getPlayer().isAlive()) {
                     Game.GAME_STATE = GameState.GAME_OVER;
@@ -220,13 +246,21 @@ public class LevelManager {
     private void updateEnemiesMovement() {
         if ((level-1) % 5 == 0) {
             for (Enemy enemy : enemies) {
-                enemy.updateMovement(0.3f, 0.6f , 5);
+                Boss boss = (Boss) enemy;
+                boss.updateMovement(0.2f, 2f );
+                boss.updateShooting(3);
             }
         }
         else {
             for (Enemy enemy : enemies) {
-                enemy.updateMovement();
-                enemy.updateShooting(10 + (bossLevel * 4));
+                if (enemy instanceof KamiKaze kamiKaze) {
+                    kamiKaze.updateMovement();
+                }
+                else {
+                    enemy.updateMovement();
+                    enemy.updateShooting(10 + (bossLevel * 4));
+                }
+
                 if (GameManager.getWindow().isBelowTheScreen(enemy)) {
                     Game.GAME_STATE = GameState.GAME_OVER;
                 }

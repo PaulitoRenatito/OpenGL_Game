@@ -36,7 +36,7 @@ public class GameManager {
     }
 
     private void createWindow() {
-        window = new Window();
+        window = new Window(1600,900);
         window.createWindow("Space Macetation");
         GL.createCapabilities();
     }

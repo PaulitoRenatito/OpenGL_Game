@@ -5,10 +5,13 @@ public class Projectile extends Entity {
 
     private boolean isFromPlayer;
 
-    public Projectile(Transform transform, float speed, boolean isFromPlayer) {
+    private int damage = 1;
+
+    public Projectile(Transform transform, float speed, int damage, boolean isFromPlayer) {
         super(transform);
         this.transform = transform;
         this.isFromPlayer = isFromPlayer;
+        this.damage = damage;
         setSpeed(speed);
     }
 
@@ -27,5 +30,13 @@ public class Projectile extends Entity {
 
     public void setFromPlayer(boolean fromPlayer) {
         isFromPlayer = fromPlayer;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
     }
 }

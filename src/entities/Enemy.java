@@ -1,23 +1,21 @@
 package entities;
 
+import managers.GameManager;
 import types.*;
 
 import java.util.Random;
 
 public class Enemy extends Creature {
 
-    private Weapon weapon = new Weapon(false, 5f);
+    protected Weapon weapon = new Weapon(false, 5f);
 
     public Enemy(Transform transform, int health) {
         super(transform, health);
     }
 
     public void updateMovement() {
-        this.getTransform().MoveDownZigZagging(0.3f, 3);
-    }
-
-    public void updateMovement(float speed,float zigzagSpeed, int switchSideTime) {
-        this.getTransform().MoveDownZigZagging(speed, zigzagSpeed, switchSideTime);
+        float switchTime = (GameManager.getWindow().getWidth() * 4/1600f);
+        this.getTransform().MoveDownZigZagging(0.3f, switchTime);
     }
 
     public void updateShooting(int bound) {

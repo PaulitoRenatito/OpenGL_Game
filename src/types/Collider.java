@@ -2,6 +2,8 @@ package types;
 
 import entities.Entity;
 
+import java.awt.*;
+
 public class Collider {
 
     Vector2 position;
@@ -33,7 +35,7 @@ public class Collider {
         }
     }
 
-    public void onCollide(Entity entity) {
-        System.out.println( getClass().getName() + " Colliding with " + entity.getClass().getName());
+    public void onCollide(Transform transform) {
+        transform.Blink(Color.RED);
     }
 }

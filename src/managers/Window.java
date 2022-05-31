@@ -13,7 +13,8 @@ public class Window {
     private int width;
     private int height;
 
-    private float aspect;
+    private float newWidth;
+    private float newHeight;
 
     public static long WINDOW;
 
@@ -21,12 +22,17 @@ public class Window {
 
     public Window() {
         setSize(1600, 900);
+        this.width = 1600;
+        this.height = 900;
+        newWidth = 1f;
+        newHeight = 1f;
     }
 
     public Window(int width, int height) {
         this.width = width;
         this.height = height;
-        aspect = (float)width / (float)height;
+        newWidth = 1f;
+        newHeight = 1f;
     }
 
     public void createWindow(String title) {
@@ -65,11 +71,14 @@ public class Window {
     }
 
     private void reshape(int width, int height) {
+
         final float ar_origin = (float) this.width / (float) this.height;
         final float ar_new = (float) width / (float) height;
 
         float scale_w = (float) width / (float) this.width;
         float scale_h = (float) height / (float) this.height;
+
+
 
         if (ar_new > ar_origin) {
             scale_w = scale_h;
@@ -77,6 +86,9 @@ public class Window {
         else {
             scale_h = scale_w;
         }
+
+        newWidth = scale_w;
+        newHeight = scale_h;
 
         glViewport(0, 0, (int) (this.width * scale_w), (int) (this.height * scale_h));
         glMatrixMode(GL_PROJECTION);
@@ -139,6 +151,22 @@ public class Window {
 
     public int getHeight() {
         return height;
+    }
+
+    public float getNewWidth() {
+        return newWidth;
+    }
+
+    public void setNewWidth(float newWidth) {
+        this.newWidth = newWidth;
+    }
+
+    public float getNewHeight() {
+        return newHeight;
+    }
+
+    public void setNewHeight(float newHeight) {
+        this.newHeight = newHeight;
     }
 
     public boolean isFullScreen() {

@@ -13,6 +13,8 @@ public class Weapon {
     private float cooldown = 2f;
     private float time = 0f;
 
+    private int damage = 1;
+
     public Weapon(boolean pointingUp) {
         this.pointingUp = pointingUp;
     }
@@ -20,6 +22,12 @@ public class Weapon {
     public Weapon(boolean pointingUp, float cooldown) {
         this.pointingUp = pointingUp;
         this.cooldown = cooldown;
+    }
+
+    public Weapon(boolean pointingUp, float cooldown, int damage) {
+        this.pointingUp = pointingUp;
+        this.cooldown = cooldown;
+        this.damage = damage;
     }
 
     public void fireProjectile(Transform transform) {
@@ -30,12 +38,12 @@ public class Weapon {
             if (pointingUp) {
                 projectile = new Projectile(new Transform(projectileSize, new Vector2(transform.getPosition().getX(),
                         transform.getPosition().getY() + transform.getSize()), new Sprite("res/Shoot.png")),
-                        5f, true);
+                        5f, damage, true);
             }
             else {
                 projectile = new Projectile(new Transform(projectileSize, new Vector2(transform.getPosition().getX(),
                         transform.getPosition().getY() - transform.getSize()), new Sprite("res/Shoot.png")),
-                        2.5f, false);
+                        2.5f, damage, false);
             }
 
 
@@ -60,5 +68,13 @@ public class Weapon {
 
     public void setCooldown(float cooldown) {
         this.cooldown = cooldown;
+    }
+
+    public float getProjectileSize() {
+        return projectileSize;
+    }
+
+    public void setProjectileSize(float projectileSize) {
+        this.projectileSize = projectileSize;
     }
 }

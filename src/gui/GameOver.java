@@ -4,10 +4,15 @@ import main.Game;
 import managers.GameManager;
 import managers.LevelManager;
 import managers.Window;
+import org.lwjgl.BufferUtils;
 import types.GameState;
 import types.Input;
 import types.KeyCode;
 import types.Sprite;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.nio.ByteBuffer;
 
 import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 import static org.lwjgl.opengl.GL11.*;
@@ -57,13 +62,13 @@ public class GameOver {
 
         glBegin(GL_QUADS);
         glTexCoord2f(0, 0);
-        glVertex2f(-1600, 900);
+        glVertex2f(-GameManager.getWindow().getWidth(), GameManager.getWindow().getHeight());
         glTexCoord2f(1, 0);
-        glVertex2f(1600, 900);
+        glVertex2f(GameManager.getWindow().getWidth(), GameManager.getWindow().getHeight());
         glTexCoord2f(1, 1);
-        glVertex2f(1600, -900);
+        glVertex2f(GameManager.getWindow().getWidth(), -GameManager.getWindow().getHeight());
         glTexCoord2f(0, 1);
-        glVertex2f(-1600, -900);
+        glVertex2f(-GameManager.getWindow().getWidth(), -GameManager.getWindow().getHeight());
         glEnd();
 
         glDisable(GL_TEXTURE_2D);
@@ -83,13 +88,13 @@ public class GameOver {
 
         glBegin(GL_QUADS);
         glTexCoord2f(0, 0);
-        glVertex2f(-800, 450);
+        glVertex2f(-GameManager.getWindow().getWidth()/2f, GameManager.getWindow().getHeight()/2f);
         glTexCoord2f(1, 0);
-        glVertex2f(800, 450);
+        glVertex2f(GameManager.getWindow().getWidth()/2f, GameManager.getWindow().getHeight()/2f);
         glTexCoord2f(1, 1);
-        glVertex2f(800, -450);
+        glVertex2f(GameManager.getWindow().getWidth()/2f, -GameManager.getWindow().getHeight()/2f);
         glTexCoord2f(0, 1);
-        glVertex2f(-800, -450);
+        glVertex2f(-GameManager.getWindow().getWidth()/2f, -GameManager.getWindow().getHeight()/2f);
         glEnd();
 
         glDisable(GL_TEXTURE_2D);

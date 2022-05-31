@@ -2,7 +2,6 @@ package gui;
 
 import main.Game;
 import managers.GameManager;
-import managers.LevelManager;
 import managers.Window;
 import types.GameState;
 import types.Input;
@@ -49,13 +48,13 @@ public class Menu {
 
         glBegin(GL_QUADS);
         glTexCoord2f(0, 0);
-        glVertex2f(-1600, 900);
+        glVertex2f(-GameManager.getWindow().getWidth(), GameManager.getWindow().getHeight());
         glTexCoord2f(1, 0);
-        glVertex2f(1600, 900);
+        glVertex2f(GameManager.getWindow().getWidth(), GameManager.getWindow().getHeight());
         glTexCoord2f(1, 1);
-        glVertex2f(1600, -900);
+        glVertex2f(GameManager.getWindow().getWidth(), -GameManager.getWindow().getHeight());
         glTexCoord2f(0, 1);
-        glVertex2f(-1600, -900);
+        glVertex2f(-GameManager.getWindow().getWidth(), -GameManager.getWindow().getHeight());
         glEnd();
 
         glDisable(GL_TEXTURE_2D);

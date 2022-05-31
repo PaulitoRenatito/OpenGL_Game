@@ -70,9 +70,15 @@ public class Game {
                 glClear(GL_COLOR_BUFFER_BIT);
 
                 switch (GAME_STATE) {
-                    case MENU -> menu.displayMenu();
-                    case GAME -> gameManager.displayGame();
-                    case GAME_OVER -> gameOver.displayGameOver();
+                    case MENU:
+                        menu.displayMenu();
+                        break;
+                    case GAME:
+                        gameManager.displayGame();
+                        break;
+                    case GAME_OVER:
+                        gameOver.displayGameOver();
+                        break;
                 }
 
                 GameManager.getWindow().swapBuffers();

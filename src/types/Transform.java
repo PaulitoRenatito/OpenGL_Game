@@ -1,4 +1,6 @@
 package types;
+import managers.GameManager;
+
 import java.awt.*;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -8,6 +10,8 @@ public class Transform {
     private float size;
 
     private boolean startMovingRight = true;
+
+    private boolean blink = false;
 
     private float incrementX = 2.5f;
 
@@ -19,9 +23,12 @@ public class Transform {
 
     private Collider collider;
 
+    private float timer = 0f;
+    private float timerBlink = 0f;
+
     public Transform() {
 
-        size = 60f;
+        size = (GameManager.getWindow().getWidth()*60)/1600f;
         position = new Vector2();
         color = new Color(1, 1, 1, 1);
         collider = new Collider(position, size);
@@ -56,9 +63,10 @@ public class Transform {
 
     public Transform(float size, Vector2 position, Sprite sprite) {
 
-        this.size = size;
+        this.size = (GameManager.getWindow().getWidth()*size)/1600f;
         this.position = position;
         this.sprite = sprite;
+        color = new Color(1, 1, 1, 1);
         collider = new Collider(position, size);
 
         this.sprite.enableImage();
@@ -87,11 +95,11 @@ public class Transform {
 
     public void updateMovement(Vector2 movement) {
 
+        updateColor();
+
         collider.updateCollider(position, size);
 
-        // glClear(GL_COLOR_BUFFER_BIT);
-
-        glColor3f(1, 1, 1);
+        glColor3f(color.getRed(), color.getGreen(), color.getBlue());
 
         sprite.enableImage();
 
@@ -116,7 +124,48 @@ public class Transform {
         sprite.disableImage();
     }
 
+    public void Blink(Color color) {
+        blink = true;
+    }
+
+    public void updateColor() {
+
+        if (blink) {
+
+            if (timerBlink < 0.25f) {
+                this.color = Color.RED;
+            }
+            else if(timerBlink < 0.5f) {
+                this.color = Color.WHITE;
+            }
+            else if(timerBlink < 0.75f) {
+                this.color = Color.RED;
+            }
+            else if (timerBlink < 1f) {
+                this.color = Color.WHITE;
+            }
+            else if(timerBlink < 1.25f) {
+                this.color = Color.RED;
+            }
+            else if(timerBlink < 1.5f) {
+                this.color = Color.WHITE;
+            }
+            else if(timerBlink < 1.75f) {
+                this.color = Color.RED;
+            }
+            else if(timerBlink < 2f) {
+                this.color = Color.WHITE;
+                timerBlink = 0;
+                blink = false;
+            }
+
+            timerBlink += 0.02f;
+        }
+    }
+
     public void MoveUp(float speed) {
+
+        speed = (GameManager.getWindow().getWidth() * speed)/1600f;
 
         position.incrementY(5f * speed);
 
@@ -150,11 +199,13 @@ public class Transform {
 
     public void MoveDown(float speed) {
 
+        speed = (GameManager.getWindow().getWidth() * speed) / 1600f;
+
         position.incrementY(-5f * speed);
 
         collider.updateCollider(position, size);
 
-        glColor3f(1, 1, 1);
+        glColor3f(1, .9f, 0);
 
         sprite.enableImage();
 
@@ -180,9 +231,9 @@ public class Transform {
 
     }
 
-    private float timer = 0f;
+    public void MoveDownZigZagging(float speed, float switchSideTime) {
 
-    public void MoveDownZigZagging(float speed, int switchSideTime) {
+        speed = ((GameManager.getWindow().getWidth() * speed)/1600f);
 
         if (timer > switchSideTime) {
             timer = 0;
@@ -221,7 +272,11 @@ public class Transform {
         timer += 0.02f;
     }
 
-    public void MoveDownZigZagging(float speed, float zigzagSpeed, int switchSideTime) {
+    public void MoveDownZigZagging(float speed, float zigzagSpeed, float switchSideTime) {
+
+        updateColor();
+
+        speed = (GameManager.getWindow().getWidth() * speed)/1600f;
 
         if (timer > switchSideTime) {
             timer = 0;
@@ -233,7 +288,7 @@ public class Transform {
 
         collider.updateCollider(position, size);
 
-        glColor3f(1, 1, 1);
+        glColor3f(color.getRed(), color.getGreen(), color.getBlue());
 
         sprite.enableImage();
 
@@ -262,24 +317,38 @@ public class Transform {
 
     public void moveTowards(Vector2 target) {
 
-        position.increment(target.subtract(position).divided(80f)); // myPosition += (target - myPosition) / 50f
+        Vector2 dir = new Vector2();
+        dir.increment(target.subtract(position));
+
+        float hyp = (float) Math.sqrt(Math.pow(dir.getX(), 2) + Math.pow(dir.getY(), 2));
+        dir.setX(dir.getX()/hyp);
+        dir.setY(dir.getY()/hyp);
+
+        position.increment(dir.multiply(4f));
+
+        glColor3f(1, 1, 1);
+
+        sprite.enableImage();
+
+        glBindTexture(GL_TEXTURE_2D, sprite.getId());
 
         glBegin(GL_QUADS);
 
-            glColor4f(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        glTexCoord2f(0, 0);
+        glVertex2f(-size + position.getX(), size + position.getY());
 
-            glVertex2f(-size + position.getX(), size + position.getY());
+        glTexCoord2f(1, 0);
+        glVertex2f(size + position.getX(), size + position.getY());
 
+        glTexCoord2f(1, 1);
+        glVertex2f(size + position.getX(), -size + position.getY());
 
-            glVertex2f(size + position.getX(), size + position.getY());
-
-
-            glVertex2f(size + position.getX(), -size + position.getY());
-
-
-            glVertex2f(-size + position.getX(), -size + position.getY());
+        glTexCoord2f(0, 1);
+        glVertex2f(-size + position.getX(), -size + position.getY());
 
         glEnd();
+
+        sprite.disableImage();
 
     }
 
@@ -335,5 +404,13 @@ public class Transform {
 
     public void setIncrementX(float incrementX) {
         this.incrementX = incrementX;
+    }
+
+    public boolean isBlink() {
+        return blink;
+    }
+
+    public void setBlink(boolean blink) {
+        this.blink = blink;
     }
 }
