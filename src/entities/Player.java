@@ -1,4 +1,5 @@
 package entities;
+import gui.Sound;
 import types.*;
 
 public class Player extends Creature {
@@ -37,6 +38,9 @@ public class Player extends Creature {
         }
 
         if ((Input.GetMouseButton(KeyCode.LEFT_BUTTON) || Input.GetKey(KeyCode.SPACE)) && weapon.canFire()) {
+            Sound sound = new Sound();
+            sound.setFile("res/shoot.wav");
+            sound.play();
             weapon.fireProjectile(transform);
         }
 

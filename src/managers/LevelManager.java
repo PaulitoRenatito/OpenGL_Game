@@ -1,5 +1,6 @@
 package managers;
 import entities.*;
+import gui.Sound;
 import main.Game;
 import types.GameState;
 import types.Sprite;
@@ -12,6 +13,8 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.glEnd;
 
 public class LevelManager {
+
+    Sound music = new Sound("res/music.wav");
 
     private int level = 1;
 
@@ -51,6 +54,10 @@ public class LevelManager {
         updateProjectilesMovement();
 
         limitBounds();
+
+        if (!music.isPlaying()) {
+            music.play();
+        }
 
     }
 
@@ -190,6 +197,12 @@ public class LevelManager {
                     GameManager.getPlayer().receiveDamage(projectile.getDamage());
                     GameManager.getPlayer().getTransform().getCollider().onCollide(GameManager.getPlayer().getTransform());
 
+                    Sound damageSound = new Sound("res/damage.wav");
+
+                    if (!damageSound.isPlaying()) {
+                        damageSound.play();
+                    }
+
                     if (!GameManager.getPlayer().isAlive()) {
                         Game.GAME_STATE = GameState.GAME_OVER;
                     }
@@ -207,10 +220,16 @@ public class LevelManager {
 
         if (removeEnemy != null) {
             enemies.remove(removeEnemy);
+            Sound explosionSound = new Sound("res/explosion.wav");
+            explosionSound.play();
         }
 
         for (Enemy enemy : enemies) {
             if(GameManager.getPlayer().getTransform().getCollider().collidingWith(enemy)) {
+
+                Sound damageSound = new Sound("res/damage.wav");
+
+                damageSound.play();
 
                 if (enemy instanceof Boss || enemy instanceof KamiKaze) {
                     GameManager.getPlayer().receiveDamage(5);
@@ -239,6 +258,9 @@ public class LevelManager {
 
         if (removeEnemy != null) {
             enemies.remove(removeEnemy);
+
+            Sound explosionSound = new Sound("res/explosion.wav");
+            explosionSound.play();
         }
 
     }
