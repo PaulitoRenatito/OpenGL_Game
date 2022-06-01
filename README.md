@@ -4,6 +4,10 @@ O jogo Space Macetation se trata de uma aplicação em Java utilizando OpenGL on
 
 Para se mover o jogador pode utilizar as teclas ASWD ou as setas ←↓→↑, além disso ele pode atirar com o SPAÇO ou com o boão direito do Mouse. Apertando P o jogo pausa/continua e apertando R o jogo reinicia. Com a tecla ESC a janela do jogo é fechada.
 
+O jogo foi feito na IDE IntelliJ utilizando o conjunto de  biblioteca LWGL. As bibliotecas foram disponibilizadas na pasta lib do zip. Caso queira baixar as bibliotecas manualmente : https://www.lwjgl.org/customize  ----- https://github.com/LWJGL/lwjgl3-wiki/wiki/1.2.-Install .
+
+Para a execução do jogo, na pasta out -> artifacts -> SpaceMacetation tem um arquivo .jar --> Para abrir e executar o arquivo .jar basta abrir o terminal(como administrador) e digitar o comando  –> java –jar c:\path\to\jar\file.jar  .
+
 ## Extras implementados:
 1. **Fundo lindão:** Apesar de não ser animado o background do game é deveras bonito.
 2. **Inimigos Diferentes:** Existe um inimigo *Boss* que aparece a cada 5 niveis, cada vez com 10 a mais de vida, além disso, um inimigo que aparece depois do primeiro *Boss*, esse inimigo (*KamiKaze*) vai em direção ao player e tenta se chocar contra o mesmo.
