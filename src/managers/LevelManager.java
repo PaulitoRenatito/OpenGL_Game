@@ -110,7 +110,7 @@ public class LevelManager {
             float spaceBetweenEnemies = GameManager.getWindow().getWidth()/(numberOfEnemies-2.5f);
 
             Random random = new Random();
-            boolean kamiKaze = random.nextBoolean();
+            int kamiKaze = random.nextInt(0, 3);
 
             if (bossLevel > 0) {
 
@@ -137,10 +137,11 @@ public class LevelManager {
                     }
                 }
 
-                if (kamiKaze) {
+                for (int i = 0; i < kamiKaze; i ++) {
+                    float spaceBetweenEnemies2 = GameManager.getWindow().getWidth()/3f;
                     Enemy enemy = new KamiKaze(new Transform(60f,
-                            new Vector2(0, spawnY * 2),
-                            new Sprite("res/ship4.png")), 1);
+                            new Vector2(spaceBetweenEnemies2 * i, spawnY * 2),
+                            new Sprite("res/ship4.png")), 2);
                     enemies.add(enemy);
                 }
 
@@ -180,6 +181,9 @@ public class LevelManager {
 
                         if (enemy instanceof Boss boss) {
                             boss.getTransform().getCollider().onCollide(boss.getTransform());
+                        }
+                        else if(enemy instanceof KamiKaze kamiKaze) {
+                            kamiKaze.getTransform().getCollider().onCollide(kamiKaze.getTransform());
                         }
 
                         if (!enemy.isAlive()) {
@@ -240,6 +244,7 @@ public class LevelManager {
                 }
 
                 if (!GameManager.getPlayer().isAlive()) {
+                    music.stop();
                     Game.GAME_STATE = GameState.GAME_OVER;
                 }
 
@@ -284,6 +289,7 @@ public class LevelManager {
                 }
 
                 if (GameManager.getWindow().isBelowTheScreen(enemy)) {
+                    music.stop();
                     Game.GAME_STATE = GameState.GAME_OVER;
                 }
             }

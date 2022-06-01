@@ -24,6 +24,10 @@ public class GameOver {
 
     Sprite gameOver = new Sprite("res/backgroundGameOver.png");
 
+    Sound sound = new Sound("res/gameOver.wav");
+
+    boolean aux = true;
+
     public void displayGameOver() {
 
         displayBackgroundImage();
@@ -31,6 +35,11 @@ public class GameOver {
         displayGameOverImage();
 
         getInputs();
+
+        if (aux) {
+            sound.play();
+            aux = false;
+        }
 
     }
 

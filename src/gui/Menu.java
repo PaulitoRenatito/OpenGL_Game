@@ -16,16 +16,23 @@ public class Menu {
 
     Sprite background = new Sprite("res/backgroundMenu.png");
 
+    Sound music = new Sound("res/musicMenu.wav");
+
     public void displayMenu() {
 
         displayBackgroundImage();
 
         getInputs();
 
+        if (!music.isPlaying()) {
+            music.play();
+        }
+
     }
 
     private void getInputs() {
         if (Input.GetKeyDown(KeyCode.J)) {
+            music.stop();
             Game.GAME_STATE = GameState.GAME;
         }
         else if (Input.GetKeyDown(KeyCode.ESC)) {

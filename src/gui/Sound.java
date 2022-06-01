@@ -35,16 +35,23 @@ public class Sound {
     }
 
     public void play() {
-        isPlaying = true;
         clip.setFramePosition(0);
         clip.start();
-        if (clip.isRunning()) {
-            isPlaying = false;
-        }
+    }
+
+    public void stop() {
+        clip.setFramePosition(clip.getFrameLength());
+        clip.stop();
+        clip.close();
     }
 
     public boolean isPlaying() {
-        return isPlaying;
+        if (!clip.isRunning()) {
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 
     public void setPlaying(boolean playing) {

@@ -317,6 +317,8 @@ public class Transform {
 
     public void moveTowards(Vector2 target) {
 
+        updateColor();
+
         Vector2 dir = new Vector2();
         dir.increment(target.subtract(position));
 
@@ -324,9 +326,9 @@ public class Transform {
         dir.setX(dir.getX()/hyp);
         dir.setY(dir.getY()/hyp);
 
-        position.increment(dir.multiply(4f));
+        position.increment(dir.multiply(6f));
 
-        glColor3f(1, 1, 1);
+        glColor3f(color.getRed(), color.getGreen(), color.getBlue());
 
         sprite.enableImage();
 
@@ -349,6 +351,8 @@ public class Transform {
         glEnd();
 
         sprite.disableImage();
+
+        timer += 0.02f;
 
     }
 
